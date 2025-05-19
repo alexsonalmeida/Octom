@@ -1,0 +1,128 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String            @id @default(cuid())
+  firstName        String
+  lastName         String
+  email            String            @unique
+  role             String
+  profilePicture   String?
+  teamId           String
+  team             Team              @relation(fields: [teamId], references: [id])
+  chatParticipants ChatParticipant[]
+  files            File[]            @relation("FileViewers")
+  message          Message[]
+  taskCollaborators TaskCollaborators[]
+}
+
+model Team {
+  id    String @id @default(cuid())
+  name  String
+  users User[]
+  chat  Chat?
+}
+
+model Chat {
+  id               String            @id @default(cuid())
+  type             String
+  createdAt        DateTime          @default(now())
+  teamId           String?           @unique
+  team             Team?             @relation(fields: [teamId], references: [id])
+  chatParticipants ChatParticipant[]
+  messages         Message[]
+}
+
+model ChatParticipant {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+  chatId String
+  chat   Chat   @relation(fields: [chatId], references: [id])
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  text      String?
+  file      File?
+  createdAt DateTime @default(now())
+  senderId  String
+  sender    User     @relation(fields: [senderId], references: [id])
+  chatId    String
+  chat      Chat     @relation(fields: [chatId], references: [id])
+}
+
+model File {
+  id        String   @id @default(cuid())
+  name      String
+  type      String
+  size      Int
+  url       String
+  messageId String?  @unique
+  message   Message? @relation(fields: [messageId], references: [id])
+  viewers   User[]   @relation("FileViewers")
+}
+
+model Task {
+  id          String    @id @default(cuid())
+  title       String
+  description String?
+  status      String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  substasks   Subtask[]
+  tag         Tag?
+  goalId      String?
+  goal        Goal?     @relation(fields: [goalId], references: [id])
+  taskCollaborators TaskCollaborators[]
+}
+
+model TaskCollaborators {
+  userId    String
+  taskId    String
+  user      User     @relation(fields: [userId], references: [id])
+  task      Task     @relation(fields: [taskId], references: [id])
+
+  @@id([userId, taskId])
+}
+
+model Tag {
+  id        String   @id @default(cuid())
+  name      String
+  color     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  taskId    String   @unique
+  task      Task     @relation(fields: [taskId], references: [id])
+}
+
+model Subtask {
+  id          String  @id @default(cuid())
+  title       String
+  description String?
+  status      String
+  taskId      String
+  task        Task    @relation(fields: [taskId], references: [id])
+}
+
+model Goal {
+  id        String   @id @default(cuid())
+  title     String
+  color     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  tasks     Task[]
+}
