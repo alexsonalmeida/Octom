@@ -28,6 +28,25 @@ export class MessageRepository {
     });
   }
 
+
+  async sendMessage(chatId: string, senderId: string, text: string) {
+    return this.prisma.message.create({
+      data: {
+        text,
+        chat: { connect: { id: chatId } },
+        sender: { connect: { id: senderId } },
+      },
+    });
+  }
+
+  async getMessages(chatId: string) {
+    return this.prisma.message.findMany({
+      where: { chatId },
+      orderBy: { createdAt: 'asc' },
+      include: { sender: true },
+    });
+  }
+
   delete(id: string) {
     return this.prisma.message.delete({ where: { id } });
   }

@@ -12,22 +12,33 @@ export class SubtaskRepository {
   }
 
   findAll() {
-    return this.prisma.subtask.findMany();
+    return this.prisma.subtask.findMany({
+      include: { task: true },
+    });
   }
 
   findOne(id: string) {
-    return this.prisma.subtask.findUnique({ where: { id } });
+    return this.prisma.subtask.findUnique({
+      where: { id },
+      include: { task: true },
+    });
   }
 
   findByTaskId(taskId: string) {
-    return this.prisma.subtask.findMany({ where: { taskId } });
+    return this.prisma.subtask.findMany({
+      where: { taskId },
+    });
   }
 
   update(id: string, data: UpdateSubtaskDto) {
-    return this.prisma.subtask.update({ where: { id }, data });
+    return this.prisma.subtask.update({
+      where: { id },
+      data,
+    });
   }
 
   remove(id: string) {
     return this.prisma.subtask.delete({ where: { id } });
   }
 }
+

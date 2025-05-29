@@ -11,6 +11,16 @@ export class MessageController {
     return this.service.create(dto);
   }
 
+  @Post()
+  sendMessage(@Body() body: { chatId: string; senderId: string; text: string }) {
+    return this.service.sendMessage(body.chatId, body.senderId, body.text);
+  }
+
+  @Get(':chatId')
+  getMessages(@Param('chatId') chatId: string) {
+    return this.service.getMessages(chatId);
+  }
+
   @Get('chat/:chatId')
   findByChat(@Param('chatId') chatId: string) {
     return this.service.findByChat(chatId);

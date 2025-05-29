@@ -2,7 +2,9 @@ import { Controller, Post, Get, Patch, Delete, Param, Body } from '@nestjs/commo
 import { SubtaskService } from './subtask.service';
 import { CreateSubtaskDto } from './dto/create-subtask.dto';
 import { UpdateSubtaskDto } from './dto/update-subtask.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('subtasks')
 @Controller('subtasks')
 export class SubtaskController {
   constructor(private readonly service: SubtaskService) {}
@@ -37,3 +39,4 @@ export class SubtaskController {
     return this.service.remove(id);
   }
 }
+

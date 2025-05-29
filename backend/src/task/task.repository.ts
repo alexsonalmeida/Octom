@@ -7,7 +7,15 @@ export class TaskRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(data: Prisma.TaskCreateInput) {
-    return this.prisma.task.create({ data });
+    return this.prisma.task.create({
+      data,
+      include: {
+        tag: true,
+        goal: true,
+        substasks: true,
+        taskCollaborators: { include: { user: true } },
+      },
+    });
   }
 
   async findAll() {
@@ -16,7 +24,7 @@ export class TaskRepository {
         tag: true,
         goal: true,
         substasks: true,
-        taskCollaborators: true,
+        taskCollaborators: { include: { user: true } },
       },
     });
   }
@@ -28,7 +36,7 @@ export class TaskRepository {
         tag: true,
         goal: true,
         substasks: true,
-        taskCollaborators: true,
+        taskCollaborators: { include: { user: true } },
       },
     });
   }
@@ -37,6 +45,12 @@ export class TaskRepository {
     return this.prisma.task.update({
       where: { id },
       data,
+      include: {
+        tag: true,
+        goal: true,
+        substasks: true,
+        taskCollaborators: { include: { user: true } },
+      },
     });
   }
 
@@ -46,3 +60,4 @@ export class TaskRepository {
     });
   }
 }
+

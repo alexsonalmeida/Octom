@@ -10,6 +10,14 @@ export class MessageService {
     return this.repository.create(dto);
   }
 
+  sendMessage(chatId: string, senderId: string, text: string) {
+    return this.repository.sendMessage(chatId, senderId, text);
+  }
+
+  getMessages(chatId: string) {
+    return this.repository.getMessages(chatId);
+  }
+
   findByChat(chatId: string) {
     return this.repository.findByChat(chatId);
   }

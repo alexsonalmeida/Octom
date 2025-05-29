@@ -12,6 +12,21 @@ export class ChatController {
     return this.chatService.create(dto);
   }
 
+  @Post('private')
+  createPrivate(@Body() body: { user1Id: string; user2Id: string }) {
+    return this.chatService.createPrivateChat(body.user1Id, body.user2Id);
+  }
+
+  @Post('team/:teamId')
+  createTeam(@Param('teamId') teamId: string) {
+    return this.chatService.createTeamChat(teamId);
+  }
+
+  @Get('user/:userId')
+  getUserChats(@Param('userId') userId: string) {
+    return this.chatService.getUserChats(userId);
+  }
+
   @Get()
   findAll() {
     return this.chatService.findAll();

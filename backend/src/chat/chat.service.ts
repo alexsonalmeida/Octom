@@ -11,6 +11,20 @@ export class ChatService {
     return this.chatRepository.create(dto);
   }
 
+  async createPrivateChat(user1Id: string, user2Id: string) {
+    const existing = await this.chatRepository.findPrivateChat(user1Id, user2Id);
+    if (existing) return existing;
+    return this.chatRepository.createPrivateChat(user1Id, user2Id);
+  }
+
+  async createTeamChat(teamId: string) {
+    return this.chatRepository.createTeamChat(teamId);
+  }
+
+  async getUserChats(userId: string) {
+    return this.chatRepository.getUserChats(userId);
+  }
+
   findAll() {
     return this.chatRepository.findAll();
   }
