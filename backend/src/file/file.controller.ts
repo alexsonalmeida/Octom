@@ -1,14 +1,39 @@
-import { Controller, Post, Get, Delete, Param, Body } from '@nestjs/common';
+import { Controller, Post, Get, Delete, Param, Body, Query, UseInterceptors, UploadedFile, BadRequestException } from '@nestjs/common';
 import { FileService } from './file.service';
 import { CreateFileDto } from './dto/create-file.dto';
+import { SupabaseService } from 'src/services/supabase.service';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('files')
 export class FileController {
-  constructor(private readonly service: FileService) {}
+  constructor(
+    private readonly supabase: SupabaseService,
+    private readonly service: FileService,
+  ) {}
 
-  @Post()
-  create(@Body() dto: CreateFileDto) {
-    return this.service.create(dto);
+  @Post('upload')
+  @UseInterceptors(FileInterceptor('file'))
+  async upload(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() dto: CreateFileDto,
+  ) {
+    const timestamp = Date.now();
+    const path = `uploads/${timestamp}-${file.originalname}`;
+
+    const { publicUrl, error } = await this.supabase.uploadFile(path, file);
+    if (error) {
+      throw new BadRequestException('Erro ao enviar arquivo para o Supabase');
+    }
+
+    const saved = await this.service.create({
+      ...dto,
+      url: publicUrl,
+      name: file.originalname,
+      type: file.mimetype,
+      size: file.size,
+    });
+
+    return saved;
   }
 
   @Get()
@@ -17,8 +42,8 @@ export class FileController {
   }
 
   @Get(':id')
-  findById(@Param('id') id: string) {
-    return this.service.findById(id);
+  findById(@Param('id') id: string, @Query('userId') userId: string) {
+    return this.service.findById(id, userId);
   }
 
   @Get('viewer/:userId')

@@ -1,4 +1,4 @@
-import { IsInt, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsInt, IsOptional, IsString } from 'class-validator';
 
 export class CreateFileDto {
   @IsString()
@@ -16,5 +16,8 @@ export class CreateFileDto {
   @IsOptional()
   @IsString()
   messageId?: string;
+
+  @IsArray()
+  viewerIds?: string[];
 }
 

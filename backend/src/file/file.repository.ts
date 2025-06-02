@@ -15,8 +15,14 @@ export class FileRepository {
   }
 
   findById(id: string) {
-    return this.prisma.file.findUnique({ where: { id } });
+    return this.prisma.file.findUnique({
+      where: { id },
+      include: {
+        viewers: true,
+      },
+    });
   }
+
 
   findByViewer(userId: string) {
     return this.prisma.file.findMany({

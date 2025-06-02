@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { FileRepository } from './file.repository';
 import { CreateFileDto } from './dto/create-file.dto';
 
@@ -14,8 +14,13 @@ export class FileService {
     return this.repository.findAll();
   }
 
-  findById(id: string) {
-    return this.repository.findById(id);
+  async findById(id: string, userId: string) {
+    const file = await this.repository.findById(id);
+    const isViewer = file.viewers.some((viewer) => viewer.id === userId);
+
+    if (!isViewer) throw new ForbiddenException('Access denied to this file.');
+
+    return file;
   }
 
   findByViewer(userId: string) {
