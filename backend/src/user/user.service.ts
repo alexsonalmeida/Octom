@@ -1,26 +1,51 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UserRepository } from './user.repository';
+import { SupabaseService } from 'src/services/supabase.service';
 
 @Injectable()
 export class UserService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  constructor(
+    private readonly repository: UserRepository,
+    private readonly supabase: SupabaseService,
+  ) {}
+
+  async create(createUserDto: CreateUserDto, file?: Express.Multer.File) {
+    let profilePictureUrl: string | undefined;
+
+    if (file) {
+      const filePath = `profile-pictures/${Date.now()}-${file.originalname}`;
+      const upload = await this.supabase.uploadFile(filePath, file);
+
+      if ((upload as any)?.error) {
+        throw new Error('Erro ao fazer upload da imagem');
+      }
+
+      profilePictureUrl = (upload as any).publicUrl;
+    }
+
+    return this.repository.create({
+      ...createUserDto,
+      profilePicture: profilePictureUrl,
+      team: { connect: { id: createUserDto.teamId } },
+    });
   }
 
   findAll() {
-    return `This action returns all user`;
+    return this.repository.findAll();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  findOne(id: string) {
+    return this.repository.findOne(id);
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  update(id: string, dto: UpdateUserDto) {
+    return this.repository.update(id, dto);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  remove(id: string) {
+    return this.repository.remove(id);
   }
 }
+

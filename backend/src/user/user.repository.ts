@@ -7,14 +7,17 @@ export class UserRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   create(data: Prisma.UserCreateInput): Promise<User> {
-    return this.prisma.user.create({ data });
+    return this.prisma.user.create({
+      data,
+      include: { team: true },
+    });
   }
 
   findAll(): Promise<User[]> {
     return this.prisma.user.findMany();
   }
 
-  findOne(id: string): Promise<User> {
+  findOne(id: string): Promise<User | null> {
     return this.prisma.user.findUnique({ where: { id } });
   }
 
