@@ -4,6 +4,7 @@ import {
   IsArray,
   IsUUID,
   ValidateNested,
+  IsDateString,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
@@ -33,6 +34,10 @@ export class CreateTaskDto {
   @IsUUID()
   tagId?: string;
 
+  @ApiProperty({ required: false })
+  @IsUUID()
+  teamId: string;
+
   @ApiProperty({ type: [String], required: false })
   @IsOptional()
   @IsArray()
@@ -45,5 +50,15 @@ export class CreateTaskDto {
   @ValidateNested({ each: true })
   @Type(() => CreateSubtaskDto)
   subtasks?: CreateSubtaskDto[];
+
+  @ApiProperty({ required: false})
+  @IsOptional()
+  @IsDateString()
+  createdAt?: string;
+
+  @ApiProperty({ required: false})
+  @IsOptional()
+  @IsDateString()
+  updatedAt?: string;
 }
 

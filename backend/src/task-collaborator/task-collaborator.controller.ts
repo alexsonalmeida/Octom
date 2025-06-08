@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { TaskCollaboratorService } from './task-collaborator.service';
 import { CreateTaskCollaboratorDto } from './dto/create-task-collaborator.dto';
 import { UpdateTaskCollaboratorDto } from './dto/update-task-collaborator.dto';
@@ -12,23 +12,18 @@ export class TaskCollaboratorController {
     return this.taskCollaboratorService.create(createTaskCollaboratorDto);
   }
 
-  @Get()
-  findAll() {
-    return this.taskCollaboratorService.findAll();
+  @Delete()
+  remove(@Query('userId') userId: string, @Query('taskId') taskId: string) {
+    return this.taskCollaboratorService.remove(userId, taskId);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.taskCollaboratorService.findOne(+id);
+  @Get('by-task/:taskId')
+  findCollaboratorsByTask(@Param('taskId') taskId: string) {
+    return this.taskCollaboratorService.findCollaboratorsByTask(taskId);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTaskCollaboratorDto: UpdateTaskCollaboratorDto) {
-    return this.taskCollaboratorService.update(+id, updateTaskCollaboratorDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.taskCollaboratorService.remove(+id);
+  @Get('by-user/:userId')
+  findTasksByUser(@Param('userId') userId: string) {
+    return this.taskCollaboratorService.findTasksByUser(userId);
   }
 }

@@ -41,6 +41,46 @@ export class TaskRepository {
     });
   }
 
+  async findTasksByUserSince(userId: string, fromDate: Date) {
+    return this.prisma.task.findMany({
+      where: {
+        taskCollaborators: {
+          some: { userId },
+        },
+        updatedAt: {
+          gte: fromDate,
+        },
+      },
+    });
+  }
+
+  async findTeamTasksSince(teamId: string, fromDate: Date) {
+    return this.prisma.task.findMany({
+      where: {
+        teamId,
+        updatedAt: {
+          gte: fromDate,
+        },
+      },
+    });
+  }
+  
+  async findCompletedTasksByUserBetween(userId: string, from: Date, to: Date) {
+    return this.prisma.task.findMany({
+      where: {
+        taskCollaborators: {
+          some: { userId },
+        },
+        status: 'done',
+        updatedAt: {
+          gte: from,
+          lte: to,
+        },
+      },
+    });
+  }
+
+
   async update(id: string, data: Prisma.TaskUpdateInput) {
     return this.prisma.task.update({
       where: { id },
@@ -54,10 +94,25 @@ export class TaskRepository {
     });
   }
 
+  async findTasksByUser(userId: string, status?: string) {
+    return this.prisma.task.findMany({
+      where: {
+        taskCollaborators: { some: { userId } },
+        ...(status ? { status } : {}),
+      },
+      include: {
+        tag: true,
+        goal: true,
+        substasks: true,
+        taskCollaborators: { include: { user: true } },
+      },
+      orderBy: { updatedAt: 'desc' },
+    });
+  }
+
   async delete(id: string) {
     return this.prisma.task.delete({
       where: { id },
     });
   }
 }
-

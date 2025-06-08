@@ -1,5 +1,6 @@
 import { Sidebar } from "@/components/sidebar/sidebar";
 import "./globals.css";
+import { NavBar } from "@/components/navbar";
 
 export default function RootLayout({
   children,
@@ -8,11 +9,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="bg-slate-100 flex">
+      <body className="flex">
         <Sidebar/>
-        <main>
-          {children}          
-        </main>
+        <div className="flex flex-col w-full">
+          <NavBar></NavBar>
+          <main className="bg-slate-100 flex-1 overflow-y-auto pl-24">
+            {children}          
+          </main>          
+        </div>
       </body>
     </html>
   );

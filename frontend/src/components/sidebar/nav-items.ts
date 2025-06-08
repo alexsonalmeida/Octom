@@ -8,7 +8,7 @@ import {
 } from 'lucide-react';
 
 export const navItems = [
-  { href: '/dashboard', icon: LayoutDashboard },
+  { href: '/', icon: LayoutDashboard },
   { href: '/printer', icon: Printer },
   { href: '/docs', icon: BookOpen },
   { href: '/settings', icon: Settings },

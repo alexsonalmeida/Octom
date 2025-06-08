@@ -20,10 +20,7 @@ export class FileController {
     const timestamp = Date.now();
     const path = `uploads/${timestamp}-${file.originalname}`;
 
-    const { publicUrl, error } = await this.supabase.uploadFile(path, file);
-    if (error) {
-      throw new BadRequestException('Erro ao enviar arquivo para o Supabase');
-    }
+    const { publicUrl } = await this.supabase.uploadFile(path, file);
 
     const saved = await this.service.create({
       ...dto,

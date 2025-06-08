@@ -12,28 +12,53 @@ export class UserController {
   @UseInterceptors(FileInterceptor('file'))
   async create(
     @Body() createUserDto: CreateUserDto,
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFile() file?: Express.Multer.File,
   ) {
-    return this.userService.create(createUserDto, file);
+    try {
+      return await this.userService.create(createUserDto, file);
+    } catch (error) {
+      console.error('Erro no controller:', error);
+      throw error;
+    }
   }
 
   @Get()
-  findAll() {
-    return this.userService.findAll();
+  async findAll() {
+    try {
+      return await this.userService.findAll();
+    } catch (error) {
+      console.error('Erro ao buscar usuários:', error);
+      throw error;
+    }
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(id);
+  async findOne(@Param('id') id: string) {
+    try {
+      return await this.userService.findOne(id);
+    } catch (error) {
+      console.error('Erro ao buscar usuário:', error);
+      throw error;
+    }
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(id, updateUserDto);
+  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+    try {
+      return await this.userService.update(id, updateUserDto);
+    } catch (error) {
+      console.error('Erro ao atualizar usuário:', error);
+      throw error;
+    }
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(id);
+  async remove(@Param('id') id: string) {
+    try {
+      return await this.userService.remove(id);
+    } catch (error) {
+      console.error('Erro ao remover usuário:', error);
+      throw error;
+    }
   }
 }

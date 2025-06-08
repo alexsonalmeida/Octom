@@ -4,4 +4,3 @@ export class CreateTeamDto {
   @ApiProperty()
   name: string;
 }
-

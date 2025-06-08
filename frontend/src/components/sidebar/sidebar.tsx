@@ -10,7 +10,7 @@ export function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <div className="fixed left-0 top-0 z-50 h-screen w-20 border-r bg-background flex flex-col items-center py-6">
+    <div className="fixed left-0 top-0 z-50 h-screen w-20 border-r bg-slate-50 flex flex-col items-center py-6">
       <div className="mb-20 flex flex-col items-center gap-1">
         <Image src="/logo.svg" alt="Logo" width={32} height={32} />
         <span className="text-xs font-bold text-primary">OCTOM.</span>
