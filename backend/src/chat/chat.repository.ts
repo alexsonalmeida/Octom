@@ -2,6 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../utils/prisma/prisma.service';
 import { CreateChatDto } from './dto/create-chat.dto';
 import { UpdateChatDto } from './dto/update-chat.dto';
+import { Prisma } from '@prisma/client';
+
+type ChatWithParticipants = Prisma.ChatGetPayload<{
+  include: { chatParticipants: true };
+}>;
 
 @Injectable()
 export class ChatRepository {
@@ -11,33 +16,33 @@ export class ChatRepository {
     return this.prisma.chat.create({ data });
   }
 
-  async findPrivateChat(user1Id: string, user2Id: string) {
-    return this.prisma.chat.findFirst({
-      where: {
-        teamId: null,
-        chatParticipants: {
-          some: {
-            userId: user1Id,
-          },
-        },
-      },
-      include: { chatParticipants: true },
-    });
-  }
-
-  async createPrivateChat(user1Id: string, user2Id: string) {
-    return this.prisma.chat.create({
-      data: {
-        type: 'private',
-        chatParticipants: {
-          create: [
-            { user: { connect: { id: user1Id } } },
-            { user: { connect: { id: user2Id } } },
+  async findPrivateChat(user1Id: string, user2Id: string): Promise<ChatWithParticipants | null> {
+      return this.prisma.chat.findFirst({
+        where: {
+          teamId: null,
+          AND: [
+            { chatParticipants: { some: { userId: user1Id } } },
+            { chatParticipants: { some: { userId: user2Id } } },
           ],
         },
-      },
-    });
-  }
+        include: { chatParticipants: true },
+      });
+    }
+    
+    async createPrivateChat(user1Id: string, user2Id: string): Promise<ChatWithParticipants> {
+      return this.prisma.chat.create({
+        data: {
+          type: 'private',
+          chatParticipants: {
+            create: [
+              { user: { connect: { id: user1Id } } },
+              { user: { connect: { id: user2Id } } },
+            ],
+          },
+        },
+        include: { chatParticipants: true },
+      });
+    }
 
   async createTeamChat(teamId: string) {
     const existing = await this.prisma.chat.findUnique({ where: { teamId } });

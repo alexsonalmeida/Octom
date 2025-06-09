@@ -1,6 +1,8 @@
 'use client';
 
+import { ChatListDashboard } from "@/components/chat-list-dashboard";
 import { TaskStatus } from "@/components/task-status";
+import NewTaskWizard from "@/components/task-status/new-task-wizard";
 import { Scheudle } from "@/components/task-status/scheudle";
 import TaskChart from "@/components/task-status/task-chart";
 import TaskList from "@/components/task-status/task-list";
@@ -84,6 +86,11 @@ export default function Home() {
       </div>
       <div className="bg-white w-[25%] h-full p-6">
         <Scheudle/>
+        <hr className=" bg-slate-200 mb-6"/>
+        <h3 className="font-semibold text-lg mb-2">Messages</h3>
+        <ChatListDashboard userId="cmbgqxz2300006zszwfd5sx27"/>
+        <h3 className="font-semibold text-lg mb-2">New Task</h3>
+        <NewTaskWizard/>
       </div>
     </div>
   );

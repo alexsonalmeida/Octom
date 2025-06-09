@@ -16,6 +16,28 @@ export class MessageController {
     return this.service.sendMessage(body.chatId, body.senderId, body.text);
   }
 
+    /** Envia mensagem num chat que JÁ existe  */
+  @Post('chat/:chatId')
+  sendToChat(
+    @Param('chatId') chatId: string,
+    @Body() body: { senderId: string; text: string },
+  ) {
+    return this.service.sendMessage(chatId, body.senderId, body.text);
+  }
+
+  /** Envia (ou cria) chat privado + a primeira mensagem */
+  @Post('private')
+  sendPrivate(
+    @Body() body: { senderId: string; recipientId: string; text: string },
+  ) {
+    return this.service.sendPrivateMassage(
+      body.senderId,
+      body.recipientId,
+      body.text,
+    );
+  }
+
+
   @Get(':chatId')
   getMessages(@Param('chatId') chatId: string) {
     return this.service.getMessages(chatId);
