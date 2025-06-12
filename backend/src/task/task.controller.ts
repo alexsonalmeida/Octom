@@ -7,11 +7,12 @@ import {
   Param,
   Delete,
   Query,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { TaskService } from './task.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { GetTaskStatsDto } from './dto/get-task.dto';
 
 @ApiTags('tasks')
@@ -54,6 +55,10 @@ export class TaskController {
     return this.taskService.getTasksByUser(userId, status);
   }
 
+  @Get('team/:teamId')
+  findByTeam(@Param('teamId') teamId: string, @Query('status') status?: string) {
+    return this.taskService.getTasksByTeam(teamId, status);
+  }
 
   @Get(':id')
   findOne(@Param('id') id: string) {

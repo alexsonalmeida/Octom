@@ -151,6 +151,10 @@ export class TaskService {
     return { data: result };
   }
 
+  async getTasksByTeam(teamId: string, status?: string) {
+    return this.taskRepo.findTasksByTeam(teamId, status);
+  }
+
   async getTasksByUser(userId: string, status?: string) {
     return this.taskRepo.findTasksByUser(userId, status);
   }

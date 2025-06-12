@@ -64,6 +64,22 @@ export class TaskRepository {
       },
     });
   }
+
+  async findTasksByTeam(teamId: string, status?: string) {
+    return this.prisma.task.findMany({
+      where: {
+        teamId,
+        ...(status ? { status } : {}),
+      },
+      include: {
+        tag: true,
+        goal: true,
+        substasks: true,
+        taskCollaborators: { include: { user: true } },
+      },
+      orderBy: { updatedAt: 'desc' },
+    });
+  }
   
   async findCompletedTasksByUserBetween(userId: string, from: Date, to: Date) {
     return this.prisma.task.findMany({
