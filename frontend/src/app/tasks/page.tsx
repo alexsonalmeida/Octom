@@ -59,48 +59,53 @@ export default function Tasks() {
         return <div className="flex justify-center items-center h-screen">Team not found</div>;
     }
     return (
-        <main>
-            <div className='flex justify-between'>
-                <h2 className="font-semibold text-xl">Tasks</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <div className="flex items-center">
-                        {displayUsers?.map((user, index) => (
-                            <div
-                                key={user.id}
-                                className="relative"
-                                style={{
-                                    marginLeft: index > 0 ? '-8px' : '0',
-                                    zIndex: displayUsers.length - index,
-                                }}
-                            >
-                                <Avatar className="w-8 h-8 border-2 border-white">
-                                <AvatarImage 
-                                    src={user.profilePicture} 
-                                    alt={`${user.firstName} ${user.lastName}`} 
-                                />
-                                <AvatarFallback className="text-xs">
-                                    {user.firstName.charAt(0)}{user.lastName.charAt(0)}
-                                </AvatarFallback>
-                                </Avatar>
-                            </div>
-                        ))}
-                            
-                        {/* Mostrar contador de usuários restantes */}
-                            {remainingCount > 0 && (
-                            <div
-                                className="relative flex items-center justify-center w-8 h-8 bg-gray-200 text-gray-600 rounded-full border-2 border-white text-xs font-medium"
-                                style={{
-                                    marginLeft: '-8px',
-                                    zIndex: 0,
-                                }}
-                            >
-                                +{remainingCount}
-                            </div>
-                        )}
+        <main className='flex'>
+            <div className='py-4'>
+                <div className='flex justify-between'>
+                    <h2 className="font-semibold text-xl">Tasks</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div className="flex items-center">
+                            {displayUsers?.map((user, index) => (
+                                <div
+                                    key={user.id}
+                                    className="relative"
+                                    style={{
+                                        marginLeft: index > 0 ? '-8px' : '0',
+                                        zIndex: displayUsers.length - index,
+                                    }}
+                                >
+                                    <Avatar className="w-8 h-8 border-2 border-white">
+                                    <AvatarImage 
+                                        src={user.profilePicture} 
+                                        alt={`${user.firstName} ${user.lastName}`} 
+                                    />
+                                    <AvatarFallback className="text-xs">
+                                        {user.firstName.charAt(0)}{user.lastName.charAt(0)}
+                                    </AvatarFallback>
+                                    </Avatar>
+                                </div>
+                            ))}
+                                
+                            {/* Mostrar contador de usuários restantes */}
+                                {remainingCount > 0 && (
+                                <div
+                                    className="relative flex items-center justify-center w-8 h-8 bg-gray-200 text-gray-600 rounded-full border-2 border-white text-xs font-medium"
+                                    style={{
+                                        marginLeft: '-8px',
+                                        zIndex: 0,
+                                    }}
+                                >
+                                    +{remainingCount}
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
+                <KanbanBoard/>                
             </div>
-            <KanbanBoard/>
+            <div className='h-full w-44 bg-white'>
+                <p>Teste</p>
+            </div>
         </main>
     )
 }

@@ -11,16 +11,23 @@ export class TagRepository {
     return this.prisma.tag.create({ data });
   }
 
+  assignToTask(tagId: string, taskId: string) {
+    return this.prisma.task.update({
+      where: { id: taskId },
+      data: {
+        tags: {
+          connect: { id: tagId }
+        }
+      }
+    });
+  }
+
   findAll() {
     return this.prisma.tag.findMany();
   }
 
   findOne(id: string) {
     return this.prisma.tag.findUnique({ where: { id } });
-  }
-
-  findByTaskId(taskId: string) {
-    return this.prisma.tag.findUnique({ where: { taskId } });
   }
 
   update(id: string, data: UpdateTagDto) {

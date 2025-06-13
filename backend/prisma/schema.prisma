@@ -84,12 +84,10 @@ model Task {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   substasks   Subtask[]
-  tag         Tag?
-  goalId      String?
-  goal        Goal?     @relation(fields: [goalId], references: [id])
+  tags        Tag[]     @relation("TaskTags")
   taskCollaborators TaskCollaborators[]
   teamId     String
-  team Team @relation(fields: [teamId], references: [id])
+  team       Team       @relation(fields: [teamId], references: [id])
 }
 
 model TaskCollaborators {
@@ -107,8 +105,7 @@ model Tag {
   color     String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  taskId    String   @unique
-  task      Task     @relation(fields: [taskId], references: [id])
+  tasks     Task[]   @relation("TaskTags")
 }
 
 model Subtask {
@@ -118,13 +115,4 @@ model Subtask {
   status      String
   taskId      String
   task        Task    @relation(fields: [taskId], references: [id])
-}
-
-model Goal {
-  id        String   @id @default(cuid())
-  title     String
-  color     String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  tasks     Task[]
 }

@@ -8,7 +8,6 @@ import { TeamModule } from 'src/team/team.module';
 import { TaskCollaboratorModule } from 'src/task-collaborator/task-collaborator.module';
 import { TagModule } from 'src/tag/tag.module';
 import { SubtaskModule } from 'src/subtask/subtask.module';
-import { GoalModule } from 'src/goal/goal.module';
 import { ChatModule } from 'src/chat/chat.module';
 import { ChatParticipantModule } from 'src/chat-participant/chat-participant.module';
 import { MessageModule } from 'src/message/message.module';
@@ -22,7 +21,6 @@ import { MessageModule } from 'src/message/message.module';
     TaskCollaboratorModule, 
     TagModule, 
     SubtaskModule, 
-    GoalModule,
     ChatModule,
     ChatParticipantModule,
     MessageModule

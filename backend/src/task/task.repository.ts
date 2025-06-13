@@ -10,8 +10,7 @@ export class TaskRepository {
     return this.prisma.task.create({
       data,
       include: {
-        tag: true,
-        goal: true,
+        tags: true,
         substasks: true,
         taskCollaborators: { include: { user: true } },
       },
@@ -21,8 +20,7 @@ export class TaskRepository {
   async findAll() {
     return this.prisma.task.findMany({
       include: {
-        tag: true,
-        goal: true,
+        tags: true,
         substasks: true,
         taskCollaborators: { include: { user: true } },
       },
@@ -33,8 +31,7 @@ export class TaskRepository {
     return this.prisma.task.findUnique({
       where: { id },
       include: {
-        tag: true,
-        goal: true,
+        tags: true,
         substasks: true,
         taskCollaborators: { include: { user: true } },
       },
@@ -72,8 +69,7 @@ export class TaskRepository {
         ...(status ? { status } : {}),
       },
       include: {
-        tag: true,
-        goal: true,
+        tags: true,
         substasks: true,
         taskCollaborators: { include: { user: true } },
       },
@@ -102,8 +98,7 @@ export class TaskRepository {
       where: { id },
       data,
       include: {
-        tag: true,
-        goal: true,
+        tags: true,
         substasks: true,
         taskCollaborators: { include: { user: true } },
       },
@@ -117,8 +112,7 @@ export class TaskRepository {
         ...(status ? { status } : {}),
       },
       include: {
-        tag: true,
-        goal: true,
+        tags: true,
         substasks: true,
         taskCollaborators: { include: { user: true } },
       },

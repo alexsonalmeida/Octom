@@ -11,16 +11,16 @@ export class TagService {
     return this.repo.create(dto);
   }
 
+  assignToTask(tagId: string, taskId: string) {
+    return this.repo.assignToTask(tagId, taskId);
+  }
+
   findAll() {
     return this.repo.findAll();
   }
 
   findOne(id: string) {
     return this.repo.findOne(id);
-  }
-
-  findByTaskId(taskId: string) {
-    return this.repo.findByTaskId(taskId);
   }
 
   update(id: string, dto: UpdateTagDto) {

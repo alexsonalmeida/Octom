@@ -1,12 +1,9 @@
-import { IsString, IsUUID } from 'class-validator';
+import { IsHexColor, IsString } from 'class-validator';
 
 export class CreateTagDto {
   @IsString()
   name: string;
 
-  @IsString()
+  @IsHexColor()
   color: string;
-
-  @IsUUID()
-  taskId: string;
 }

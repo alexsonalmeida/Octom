@@ -13,8 +13,7 @@ export class TaskService {
       title,
       description,
       status,
-      goalId,
-      tagId,
+      tagIds,
       teamId,
       collaboratorIds,
       subtasks,
@@ -22,24 +21,25 @@ export class TaskService {
       updatedAt,
     } = createTaskDto;
 
-    const data: Prisma.TaskCreateInput = {
-      title,
-      description,
-      status,
-      goal: goalId ? { connect: { id: goalId } } : undefined,
-      tag: tagId ? { connect: { id: tagId } } : undefined,
-      team: { connect: { id: teamId } },
-      taskCollaborators: collaboratorIds
-        ? {
-            create: collaboratorIds.map((userId) => ({
-              user: { connect: { id: userId } },
-            })),
-          }
-        : undefined,
-      substasks: subtasks ? { create: subtasks } : undefined,
-      createdAt: createdAt ? new Date(createdAt) : undefined, 
-      updatedAt: updatedAt ? new Date(updatedAt) : undefined, 
-    };
+  const data: Prisma.TaskCreateInput = {
+    title,
+    description,
+    status,
+    team: { connect: { id: teamId } },
+    tags: tagIds && tagIds.length > 0 ? {
+      connect: tagIds.map((id) => ({ id })),
+    } : undefined,
+    taskCollaborators: collaboratorIds
+      ? {
+          create: collaboratorIds.map((userId) => ({
+            user: { connect: { id: userId } },
+          })),
+        }
+      : undefined,
+    substasks: subtasks ? { create: subtasks } : undefined,
+    createdAt: createdAt ? new Date(createdAt) : undefined,
+    updatedAt: updatedAt ? new Date(updatedAt) : undefined,
+  };
 
     return this.taskRepo.create(data);
   }

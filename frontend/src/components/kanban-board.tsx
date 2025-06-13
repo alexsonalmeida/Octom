@@ -20,7 +20,11 @@ export interface Task {
   description?: string;
   status: string;
   goalId?: string | null;
-  tag: string | null;
+  tags: {
+    id: string;
+    name: string;
+    color: string;
+  }[] | null;
   teamId: string;
   taskCollaborators: {
     userId: string;
@@ -59,13 +63,12 @@ export function KanbanBoard () {
         console.error('Erro ao buscar tasks:', err);
       }
     };
-
     fetchTasks();
   }, []);
 
   return (
     <ScrollArea className="w-full overflow-x-auto">
-      <div className="flex gap-4 p-4 min-w-[1200px]">
+      <div className="flex gap-4 py-4 min-w-[1200px]">
         {STATUS_COLUMNS.map((column) => {
           const filteredTasks = tasks.filter(task => task.status === column.key);
 
@@ -78,7 +81,11 @@ export function KanbanBoard () {
               {filteredTasks.map(task => (
                 <Card key={task.id} className="bg-white border-0 ">
                   <CardContent className="px-4 space-y-4">
-                    {task.tag && <Badge>{task.tag}</Badge>}
+                    {task.tags && task.tags.length > 0 && (
+                      <Badge style={{ backgroundColor: task.tags[0].color }} className='rounded'>
+                        {task.tags[0].name}
+                      </Badge>
+                    )}
                     <div className='space-y-2'>
                       <h3 className="font-semibold text-sm">{task.title}</h3>
                       <p className="text-xs text-muted-foreground">{task.description}</p>                      
