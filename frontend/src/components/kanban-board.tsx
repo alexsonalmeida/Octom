@@ -67,7 +67,7 @@ export function KanbanBoard () {
   }, []);
 
   return (
-    <ScrollArea className="w-full overflow-x-auto">
+    <ScrollArea className="w-full flex flex-col flex-1 overflow-x-auto">
       <div className="flex gap-4 py-4 min-w-[1200px]">
         {STATUS_COLUMNS.map((column) => {
           const filteredTasks = tasks.filter(task => task.status === column.key);
@@ -113,7 +113,6 @@ export function KanbanBoard () {
                         </p>
                       </div>                    
                     </div>                  
-
                   </CardContent>
                 </Card>
               ))}

@@ -69,6 +69,23 @@ export class ChatRepository {
     return this.prisma.chat.findUnique({ where: { teamId } });
   }
 
+  async getChatMessages(chatId: string) {
+    return this.prisma.message.findMany({
+      where: { chatId },
+      orderBy: { createdAt: 'asc' },
+      include: {
+        sender: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            profilePicture: true,
+          },
+        },
+      },
+    });
+  }
+
   async getUserChats(userId: string) {
     return this.prisma.chat.findMany({
       where: {

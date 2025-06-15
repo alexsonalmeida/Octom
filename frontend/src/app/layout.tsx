@@ -9,11 +9,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="flex h-screen">
+      <body className="flex">
         <Sidebar/>
-        <div className="flex flex-col w-full h-full">
+        <div className="flex flex-col w-full">
           <NavBar></NavBar>
-          <main className="bg-slate-100 flex-1 overflow-y-auto pl-24">
+          <main className="bg-slate-100  pl-24">
             {children}          
           </main>          
         </div>

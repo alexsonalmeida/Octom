@@ -25,6 +25,10 @@ export class ChatService {
     return this.chatRepository.getUserChats(userId);
   }
 
+  async getChatMessages(chatId: string) {
+    return this.chatRepository.getChatMessages(chatId);
+  }
+
   findAll() {
     return this.chatRepository.findAll();
   }

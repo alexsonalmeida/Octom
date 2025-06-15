@@ -27,6 +27,11 @@ export class ChatController {
     return this.chatService.getUserChats(userId);
   }
 
+  @Get(':id/messages')
+  getChatMessages(@Param('id') chatId: string) {
+    return this.chatService.getChatMessages(chatId);
+  }
+
   @Get()
   findAll() {
     return this.chatService.findAll();
