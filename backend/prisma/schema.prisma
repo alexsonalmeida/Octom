@@ -23,7 +23,6 @@ model User {
   teamId           String
   team             Team              @relation(fields: [teamId], references: [id])
   chatParticipants ChatParticipant[]
-  files            File[]            @relation("FileViewers")
   message          Message[]
   taskCollaborators TaskCollaborators[]
 }
@@ -34,6 +33,10 @@ model Team {
   users User[]
   tasks Task[]
   chat  Chat?
+
+  File File[]
+
+  Folder Folder[]
 }
 
 model Chat {
@@ -73,8 +76,21 @@ model File {
   url       String
   messageId String?  @unique
   message   Message? @relation(fields: [messageId], references: [id])
-  viewers   User[]   @relation("FileViewers")
+  folderId  String?
+  folder    Folder?  @relation(fields: [folderId], references: [id])
+  teamId    String
+  team      Team     @relation(fields: [teamId], references: [id])
 }
+
+
+model Folder {
+  id      String  @id @default(cuid())
+  name    String
+  teamId  String
+  team    Team     @relation(fields: [teamId], references: [id])
+  files   File[]
+}
+
 
 model Task {
   id          String    @id @default(cuid())

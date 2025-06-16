@@ -33,19 +33,14 @@ export class FileController {
     return saved;
   }
 
-  @Get()
-  findAll() {
-    return this.service.findAll();
+  @Get('team/:teamId')
+  findByTeam(@Param('teamId') teamId: string) {
+    return this.service.findByTeam(teamId);
   }
 
   @Get(':id')
-  findById(@Param('id') id: string, @Query('userId') userId: string) {
-    return this.service.findById(id, userId);
-  }
-
-  @Get('viewer/:userId')
-  findByViewer(@Param('userId') userId: string) {
-    return this.service.findByViewer(userId);
+  findById(@Param('id') id: string) {
+    return this.service.findById(id);
   }
 
   @Delete(':id')
@@ -53,3 +48,4 @@ export class FileController {
     return this.service.delete(id);
   }
 }
+

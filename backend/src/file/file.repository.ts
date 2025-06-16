@@ -10,29 +10,17 @@ export class FileRepository {
     return this.prisma.file.create({ data });
   }
 
-  findAll() {
-    return this.prisma.file.findMany();
+  findByTeam(teamId: string) {
+    return this.prisma.file.findMany({
+      where: { teamId },
+      include: { folder: true },
+    });
   }
 
   findById(id: string) {
     return this.prisma.file.findUnique({
       where: { id },
-      include: {
-        viewers: true,
-      },
-    });
-  }
-
-
-  findByViewer(userId: string) {
-    return this.prisma.file.findMany({
-      where: {
-        viewers: {
-          some: {
-            id: userId,
-          },
-        },
-      },
+      include: { folder: true },
     });
   }
 
@@ -40,3 +28,5 @@ export class FileRepository {
     return this.prisma.file.delete({ where: { id } });
   }
 }
+
+

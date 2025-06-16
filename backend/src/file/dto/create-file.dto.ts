@@ -13,11 +13,14 @@ export class CreateFileDto {
   @IsString()
   url: string;
 
+  @IsString()
+  teamId: string;
+
+  @IsOptional()
+  @IsString()
+  folderId?: string;
+
   @IsOptional()
   @IsString()
   messageId?: string;
-
-  @IsArray()
-  viewerIds?: string[];
 }
-

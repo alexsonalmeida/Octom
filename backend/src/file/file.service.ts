@@ -10,25 +10,17 @@ export class FileService {
     return this.repository.create(dto);
   }
 
-  findAll() {
-    return this.repository.findAll();
+  findByTeam(teamId: string) {
+    return this.repository.findByTeam(teamId);
   }
 
-  async findById(id: string, userId: string) {
-    const file = await this.repository.findById(id);
-    const isViewer = file.viewers.some((viewer) => viewer.id === userId);
-
-    if (!isViewer) throw new ForbiddenException('Access denied to this file.');
-
-    return file;
-  }
-
-  findByViewer(userId: string) {
-    return this.repository.findByViewer(userId);
+  findById(id: string) {
+    return this.repository.findById(id);
   }
 
   delete(id: string) {
     return this.repository.delete(id);
   }
 }
+
 

@@ -25,7 +25,7 @@ interface User {
 
 interface Message {
   id: string;
-  content: string;
+  text: string;
   createdAt: string;
   sender: {
     id: string;
@@ -34,6 +34,8 @@ interface Message {
     profilePicture: string;
   };
 }
+
+const currentUserId = 'cmbgqxz2300006zszwfd5sx27';
 
 export default function TeamChat({ chatId, users }: TeamChatProps) {
     const [messages, setMessages] = useState<Message[]>([]);
@@ -62,18 +64,38 @@ export default function TeamChat({ chatId, users }: TeamChatProps) {
     if (!newMessage.trim()) return;
 
     try {
-      const res = await api.post(`/messages`, {
-        chatId,
-        content: newMessage,
+      const res = await api.post(`/messages/chat/${chatId}`, {
+        senderId: currentUserId,
+        text: newMessage,
       });
 
-      setMessages(prev => [...prev, res.data]);
+      // Encontrar o usuário atual no array users
+      const senderUser = users.find((u) => u.id === currentUserId);
+
+      if (!senderUser) {
+        console.warn('Usuário atual não encontrado em users');
+        return;
+      }
+
+      // Construir a mensagem completa com o sender
+      const sentMessage: Message = {
+        ...res.data,
+        sender: {
+          id: senderUser.id,
+          firstName: senderUser.firstName,
+          lastName: senderUser.lastName,
+          profilePicture: senderUser.profilePicture,
+        },
+      };
+
+      setMessages((prev) => [...prev, sentMessage]);
       setNewMessage('');
       messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     } catch (err) {
       console.error('Failed to send message:', err);
     }
   };
+
 
   return (
     <div className="flex flex-col flex-1 border-l bg-white min-h-0">
@@ -128,24 +150,48 @@ export default function TeamChat({ chatId, users }: TeamChatProps) {
                     Sem mensagens para exibir.
                 </p>
             ) : (
-            messages.map((msg) => (
-                <div key={msg.id} className="flex items-start gap-2">
-                <Avatar className="w-8 h-8">
-                    <AvatarImage src={msg.sender.profilePicture} alt={msg.sender.firstName} />
-                    <AvatarFallback>
-                    {msg.sender.firstName[0]}
-                    {msg.sender.lastName[0]}
-                    </AvatarFallback>
-                </Avatar>
-                <div>
-                    <div className="text-sm font-semibold text-gray-800">
-                    {msg.sender.firstName} {msg.sender.lastName}
+              messages.map((msg) => {
+                const isCurrentUser = msg.sender.id === currentUserId;
+
+                return (
+                  <div
+                    key={msg.id}
+                    className={`flex items-start gap-2 ${isCurrentUser ? 'justify-end' : 'justify-start'}`}
+                  >
+                    {!isCurrentUser && (
+                      <Avatar className="w-6 h-6 place-self-end mb-6">
+                        <AvatarImage src={msg.sender.profilePicture} alt={msg.sender.firstName} />
+                        <AvatarFallback>
+                          {msg.sender.firstName[0]}
+                          {msg.sender.lastName[0]}
+                        </AvatarFallback>
+                      </Avatar>
+                    )}
+
+                    <div className={`space-y-1.5 max-w-[70%] ${isCurrentUser ? 'text-right' : 'text-left'}`}>
+                      <div
+                        className={`text-sm p-3 rounded-md ${
+                          isCurrentUser ? 'bg-indigo-500 text-white' : 'bg-slate-100 text-gray-600'
+                        }`}
+                      >
+                        {msg.text}
+                      </div>
+                      <div className="text-xs text-gray-400">
+                        {new Date(msg.createdAt).toLocaleTimeString()}
+                      </div>
                     </div>
-                    <div className="text-sm text-gray-600">{msg.content}</div>
-                    <div className="text-xs text-gray-400">{new Date(msg.createdAt).toLocaleTimeString()}</div>
-                </div>
-                </div>
-            ))
+                    {isCurrentUser && (
+                      <Avatar className="w-6 h-6 place-self-end mb-6">
+                        <AvatarImage src={msg.sender.profilePicture} alt={msg.sender.firstName} />
+                        <AvatarFallback>
+                          {msg.sender.firstName[0]}
+                          {msg.sender.lastName[0]}
+                        </AvatarFallback>
+                      </Avatar>
+                    )}
+                  </div>
+                );
+              })
             )}
             <div ref={messagesEndRef} />
         </div>

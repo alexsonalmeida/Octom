@@ -11,6 +11,7 @@ import { SubtaskModule } from 'src/subtask/subtask.module';
 import { ChatModule } from 'src/chat/chat.module';
 import { ChatParticipantModule } from 'src/chat-participant/chat-participant.module';
 import { MessageModule } from 'src/message/message.module';
+import { FolderModule } from 'src/folder/folder.module';
 
 @Module({
   imports: [
@@ -23,7 +24,8 @@ import { MessageModule } from 'src/message/message.module';
     SubtaskModule, 
     ChatModule,
     ChatParticipantModule,
-    MessageModule
+    MessageModule,
+    FolderModule
   ],
   controllers: [AppController],
   providers: [AppService],
