@@ -12,6 +12,7 @@ import { ChatModule } from 'src/chat/chat.module';
 import { ChatParticipantModule } from 'src/chat-participant/chat-participant.module';
 import { MessageModule } from 'src/message/message.module';
 import { FolderModule } from 'src/folder/folder.module';
+import { FileModule } from 'src/file/file.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { FolderModule } from 'src/folder/folder.module';
     ChatModule,
     ChatParticipantModule,
     MessageModule,
+    FileModule,
     FolderModule
   ],
   controllers: [AppController],

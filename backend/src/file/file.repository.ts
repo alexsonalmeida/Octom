@@ -6,8 +6,26 @@ import { CreateFileDto } from './dto/create-file.dto';
 export class FileRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  create(data: CreateFileDto) {
-    return this.prisma.file.create({ data });
+  async create(data: CreateFileDto) {
+    const { viewerIds, ...fileData } = data;
+
+    const createdFile = await this.prisma.file.create({
+      data: fileData,
+    });
+
+    if (viewerIds && viewerIds.length > 0) {
+      const viewerRecords = viewerIds.map((userId) => ({
+        fileId: createdFile.id,
+        userId,
+      }));
+
+      await this.prisma.fileViewer.createMany({
+        data: viewerRecords,
+        skipDuplicates: true,
+      });
+    }
+
+    return createdFile;
   }
 
   findByTeam(teamId: string) {

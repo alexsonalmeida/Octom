@@ -1,7 +1,6 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
 import { FolderService } from './folder.service';
 import { CreateFolderDto } from './dto/create-folder.dto';
-import { UpdateFolderDto } from './dto/update-folder.dto';
 
 @Controller('folders')
 export class FolderController {
@@ -22,5 +21,3 @@ export class FolderController {
     return this.service.delete(id);
   }
 }
-
-

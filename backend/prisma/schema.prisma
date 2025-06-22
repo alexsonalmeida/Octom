@@ -25,6 +25,7 @@ model User {
   chatParticipants ChatParticipant[]
   message          Message[]
   taskCollaborators TaskCollaborators[]
+  viewedFiles FileViewer[]
 }
 
 model Team {
@@ -73,13 +74,24 @@ model File {
   name      String
   type      String
   size      Int
-  url       String
+  url       String?
   messageId String?  @unique
   message   Message? @relation(fields: [messageId], references: [id])
   folderId  String?
   folder    Folder?  @relation(fields: [folderId], references: [id])
   teamId    String
   team      Team     @relation(fields: [teamId], references: [id])
+  viewers   FileViewer[]
+}
+
+model FileViewer {
+  fileId   String
+  userId   String
+
+  file     File   @relation(fields: [fileId], references: [id])
+  user     User   @relation(fields: [userId], references: [id])
+
+  @@id([fileId, userId])
 }
 
 

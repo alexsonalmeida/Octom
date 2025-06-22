@@ -15,6 +15,11 @@ export class FolderService {
     return this.repository.findByTeam(teamId);
   }
 
+  findById(id: string) {
+    return this.repository.findById(id);
+  }
+
+
   delete(id: string) {
     return this.repository.delete(id);
   }

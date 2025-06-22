@@ -17,6 +17,12 @@ export class FolderRepository {
     });
   }
 
+  findById(id: string) {
+    return this.prisma.folder.findUnique({ where: { id } });
+  }
+
+
+
   delete(id: string) {
     return this.prisma.folder.delete({ where: { id } });
   }

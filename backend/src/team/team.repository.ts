@@ -17,7 +17,7 @@ export class TeamRepository {
   findOne(id: string): Promise<Team | null> {
     return this.prisma.team.findUnique({
       where: { id },
-      include: { users: true, chat: true },
+      include: { users: true, chat: true, Folder: true }
     });
   }
 
