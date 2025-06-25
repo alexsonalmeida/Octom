@@ -4,7 +4,26 @@ import { CreateFolderDialog } from "@/components/create-folder-dialog";
 import { UploadFileDialog } from "@/components/upload-file-dialog";
 import { JSX, useEffect, useState } from "react";
 import api from "@/lib/axios";
-import { Folder, ImageIcon, FileText, Music, FileQuestion, } from "lucide-react";
+import { Folder, ImageIcon, FileText, Music, FileQuestion, ArrowUp, EllipsisVertical } from "lucide-react";
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from "@/components/ui/table"
+
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  Legend,
+  Cell,
+} from "recharts";
 
 type Folder = {
     id: string;
@@ -15,6 +34,8 @@ type Folder = {
         type: string;
         size: number;
         url: string;
+        createdAt: string;
+        updatedAt: string;
     }[];
 };
 
@@ -24,7 +45,6 @@ const MAX_TOTAL_MB = 512;
 const MAX_FOLDER_MB = 100;
 
 const formatMB = (bytes: number) => (bytes / BYTES_IN_MB).toFixed(1);
-
 
 type FileTypeStats = {
   label: string;
@@ -40,11 +60,27 @@ const getTypeLabelAndIcon = (mime: string): { label: string; icon: JSX.Element }
   return { label: "Other File", icon: <FileQuestion size={20} className="text-cyan-400"/> };
 };
 
+const getFileIcon = (mime: string) => {
+  if (mime.startsWith("image/")) return <ImageIcon size={20} className="text-indigo-500" />;
+  if (mime === "application/pdf") return <FileText size={20} className="text-blue-400" />;
+  if (mime.startsWith("audio/") || mime.includes("mpeg")) return <Music size={20} className="text-yellow-400" />;
+  return <FileQuestion size={20} className="text-cyan-400" />;
+};
+
+function formatDate(dateStr: string) {
+  const date = new Date(dateStr);
+  return date.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+
 const typeColors: Record<string, string> = {
-  Media: 'bg-indigo-500',
-  Documents: 'bg-blue-400',
-  Music: 'bg-yellow-400',
-  'Other File': 'bg-cyan-400',
+  Media: '#6366f1',        // indigo-500
+  Documents: '#60a5fa',    // blue-400
+  Music: '#facc15',        // yellow-400
+  'Other File': '#22d3ee', // cyan-400
 };
 
 
@@ -77,8 +113,19 @@ export default function Files() {
         icon,
         color: typeColors[label] || "bg-slate-300",
     }));
+    
+    const groupedCountMap: Record<string, number> = {};
 
+    allFiles.forEach((file) => {
+        const { label } = getTypeLabelAndIcon(file.type);
+        groupedCountMap[label] = (groupedCountMap[label] || 0) + 1;
+    });
 
+    const chartData = Object.entries(groupedCountMap).map(([label, count]) => ({
+        name: label,
+        value: count,
+        color: typeColors[label] || "bg-slate-300",
+    }));
 
     return (
         <main className="pr-4 py-4">
@@ -172,7 +219,69 @@ export default function Files() {
                     </div>                    
                 </div>
             </div>
+            <div className="flex gap-4 mt-4">
+                <div className="bg-white rounded-md p-4 w-[70%]">
+                    <div className="flex items-center justify-between mb-4">
+                        <h3 className="font-medium text-lg">Recent Files</h3>
+                        <button className="text-sm text-sky-400 hover:underline">View All</button>
+                    </div>
 
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead className="text-slate-400">Name <ArrowUp className="h-4 w-4 inline-block" /></TableHead>
+                                <TableHead className="text-slate-400">Size <ArrowUp className="h-4 w-4 inline-block" /></TableHead>
+                                <TableHead className="text-slate-400">Last Modified <ArrowUp className="h-4 w-4 inline-block" /></TableHead>
+                                <TableHead className="text-slate-400 text-right">Actions</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                        {[...allFiles]
+                            .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+                            .slice(0, 5)
+                            .map((file) => (
+                                <TableRow key={file.id} className="hover:bg-muted/50 transition">
+                                    <TableCell className="flex items-center gap-2 py-2">
+                                        <div className="p-1 rounded bg-slate-100">
+                                            {getFileIcon(file.type)}
+                                        </div>
+                                        <span className="truncate max-w-[200px]">{file.name}</span>
+                                    </TableCell>
+                                    <TableCell className="text-slate-500">{formatMB(file.size)} MB</TableCell>
+                                    <TableCell className="text-slate-500">{formatDate(file.updatedAt)}</TableCell>
+                                    <TableCell className="text-right">
+                                        <button className="text-gray-500 cursor-pointer hover:text-gray-800"><EllipsisVertical size={18} /></button>
+                                    </TableCell>
+                                </TableRow>
+                                ))}
+                        </TableBody>
+                    </Table>
+                </div>
+                <div className="flex-1 bg-white rounded-md p-4">
+                    <h3 className="font-semibold text-lg mb-4">Activity Chart</h3>
+                    <ResponsiveContainer width="100%" height={250}>
+                        <BarChart data={chartData} barSize={40}>
+                        <XAxis dataKey="name" axisLine={false} tickLine={false} />
+                        <YAxis axisLine={false} tickLine={false} />
+                        <Tooltip />
+                        <Legend
+                            payload={chartData.map((entry) => ({
+                                value: entry.name,
+                                type: "square",
+                                color: entry.color,
+                            }))}
+                        />
+
+                        <Bar dataKey="value" radius={[6, 6, 6, 6]}>
+                            {chartData.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={entry.color} />
+                            ))}
+                        </Bar>
+
+                        </BarChart>
+                    </ResponsiveContainer>
+                </div>
+            </div>
         </main>
     )
 }
