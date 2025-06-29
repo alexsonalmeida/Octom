@@ -16,7 +16,6 @@ export class MessageController {
     return this.service.sendMessage(body.chatId, body.senderId, body.text);
   }
 
-    /** Envia mensagem num chat que JÁ existe  */
   @Post('chat/:chatId')
   sendToChat(
     @Param('chatId') chatId: string,
@@ -36,7 +35,6 @@ export class MessageController {
       body.text,
     );
   }
-
 
   @Get(':chatId')
   getMessages(@Param('chatId') chatId: string) {

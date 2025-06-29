@@ -117,11 +117,25 @@ export class ChatRepository {
     return this.prisma.chat.findUnique({
       where: { id },
       include: {
-        chatParticipants: true,
-        messages: true,
+        chatParticipants: {
+          include: {
+            user: true,
+          },
+        },
+        messages: {
+          include: {
+            sender: true,
+          },
+        },
+        team: {
+          include: {
+            users: true, 
+          },
+        },
       },
     });
   }
+
 
   update(id: string, data: UpdateChatDto) {
     return this.prisma.chat.update({
