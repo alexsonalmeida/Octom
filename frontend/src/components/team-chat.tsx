@@ -96,7 +96,6 @@ export default function TeamChat({ chatId, users }: TeamChatProps) {
     }
   };
 
-
   return (
     <div className="flex flex-col flex-1 border-l bg-white min-h-0">
         <div className="flex justify-between items-center px-4 pt-4">

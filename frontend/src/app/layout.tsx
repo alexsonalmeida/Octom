@@ -13,7 +13,7 @@ export default function RootLayout({
         <Sidebar/>
         <div className="flex flex-col w-full">
           <NavBar></NavBar>
-          <main className="bg-slate-100  pl-24">
+          <main className="bg-slate-100 pl-20">
             {children}          
           </main>          
         </div>

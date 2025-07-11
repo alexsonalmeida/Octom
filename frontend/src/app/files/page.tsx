@@ -128,7 +128,7 @@ export default function Files() {
     }));
 
     return (
-        <main className="pr-4 py-4">
+        <main className="pr-4 pl-4 py-4 bg-slate-100">
             <div className="flex items-center justify-between mb-4">
                 <h2 className="font-semibold text-xl">Files</h2>   
                 <div className="flex items-center gap-2">

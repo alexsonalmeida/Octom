@@ -17,10 +17,10 @@ type Chat = {
 const USER_ID = 'cmbgqxz2300006zszwfd5sx27';
 
 export default function ChatInfo({ chat }: { chat: Chat | null }) {
-  if (!chat) return <div className="w-1/4 p-4 bg-gray-50 border-l">Selecione um chat</div>;
+  if (!chat) return <div className="w-1/4 p-4 bg-white border-l">Selecione um chat</div>;
 
   return (
-    <div className="w-1/4 p-4 bg-gray-50 border-l">
+    <div className="w-1/4 p-4 bg-white border-l">
       <h2 className="font-bold text-lg mb-2">Informações</h2>
       {chat.type === 'private' ? (
         <div className="flex gap-3 items-center">
@@ -38,11 +38,11 @@ export default function ChatInfo({ chat }: { chat: Chat | null }) {
         </div>
       ) : (
         <>
-          <div className="font-semibold mb-2">{chat.team?.name}</div>
-          <div className="text-sm text-gray-500 mb-2">
+          <div className="font-semibold">{chat.team?.name}</div>
+          <div className="text-sm text-gray-500 mb-4">
             {chat.chatParticipants.length} membros
           </div>
-          <ul className="space-y-2">
+          <ul className="space-y-4">
             {chat.chatParticipants.map(p => (
               <li key={p.user.id} className="flex items-center gap-2">
                 <img

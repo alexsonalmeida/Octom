@@ -64,7 +64,7 @@ export default function Tasks() {
         return <div className="flex justify-center items-center h-screen">Team not found</div>;
     }
     return (
-        <main className="flex overflow-hidden">
+        <main className="flex overflow-hidden pl-4">
             <div className="py-4 flex-1 overflow-x-auto overflow-y-auto min-h-0">
                 <div className="min-w-[1280px]">
                     <div className='flex justify-between max-w-[1200px]'>

@@ -36,7 +36,7 @@ export default function ChatList({ chats, onSelect }: ChatListProps) {
   };
 
   return (
-    <div className="w-1/4 border-r overflow-y-auto p-4">
+    <div className="bg-white border-t border-slate-100 w-1/4 border-r overflow-y-auto p-4">
       <h2 className="text-xl font-bold mb-4">Messages</h2>
       {chats.map(chat => (
         <div
