@@ -49,7 +49,7 @@ export function ChatListDashboard({ userId, height = 360 }: ChatListDashboardPro
   }, [userId]);
 
   const handleClick = (chatId: string) => {
-    router.push(`/messages/${chatId}`);
+    router.push(`/messages?chat=${chatId}`);
   };
 
   if (loading) {

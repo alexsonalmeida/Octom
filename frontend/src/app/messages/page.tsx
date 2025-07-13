@@ -31,21 +31,29 @@ type Chat = {
 };
 
 export default function MessagesPage() {
-  const [chats, setChats] = useState<any[]>([]);
-  const [selectedChat, setSelectedChat] = useState<any>(null);
+  const [chats, setChats] = useState<Chat[]>([]);
+  const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
+  const searchParams = useSearchParams();
+
+  const selectedChatId = searchParams.get('chat') || '';
 
   useEffect(() => {
-    fetch(`http://localhost:3333/chats/user/${USER_ID}`)
-      .then(res => res.json())
-      .then(async (data) => {
-        setChats(data);
-        if (data.length) {
-          const res = await fetch(`http://localhost:3333/chats/${data[0].id}`);
-          const chatData = await res.json();
-          setSelectedChat(chatData);
-        }
-      });
-  }, []);
+    const fetchChats = async () => {
+      const res = await fetch(`http://localhost:3333/chats/user/${USER_ID}`);
+      const data = await res.json();
+      setChats(data);
+
+      const initialChatId = selectedChatId || data?.[0]?.id;
+
+      if (initialChatId) {
+        const resChat = await fetch(`http://localhost:3333/chats/${initialChatId}`);
+        const chatData = await resChat.json();
+        setSelectedChat(chatData);
+      }
+    };
+
+    fetchChats();
+  }, [selectedChatId]);
 
   const handleSelectChat = async (chatId: string) => {
     const res = await fetch(`http://localhost:3333/chats/${chatId}`);
