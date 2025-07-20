@@ -65,8 +65,6 @@ export function TaskStatus({ icon, title, values }: TaskStatusProps) {
                     {diffText}
                 </p>
             </div>
-
-
         </div>
     );
 }

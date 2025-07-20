@@ -23,7 +23,7 @@ interface TaskPayload {
   tag?: string;
   goalId?: string;
   teamId: string;
-  collaborators: string[];
+  collaboratorIds: string[];
 }
 
 const TEAM_ID = "cmbgk0aij00006zkzt0unjbn6";
@@ -68,11 +68,13 @@ export default function NewTaskWizard() {
       title,
       status: "TODO",
       teamId: TEAM_ID,
-      collaborators: selectedCollabs.map((u) => u.id),
+      collaboratorIds: selectedCollabs.map((u) => u.id)
     };
 
     try {
-      await api.post("/tasks", payload);
+      console.log("Enviando payload para /task", payload);
+
+      await api.post("/task", payload);
       setTitle("");
       setSelectedCollabs([]);
       setStep(0);

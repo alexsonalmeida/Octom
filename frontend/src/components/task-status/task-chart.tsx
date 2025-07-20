@@ -16,7 +16,8 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
+import { toZonedTime } from 'date-fns-tz';
 
 const resolutions = ["daily", "weekly", "monthly"] as const;
 
@@ -40,16 +41,16 @@ export default function TaskChart() {
             from.setMonth(to.getMonth() - 11);
         }
 
-        const format = (date: Date) => date.toISOString().split("T")[0];
+        const format = (date: Date) => date.toISOString();
 
         try {
             const response = await axios.get(
                 `http://localhost:3333/task/cmbgqxz2300006zszwfd5sx27/completed-stats`,
                 {
                     params: {
-                    from: format(from),
-                    to: format(to),
-                    resolution,
+                        from: format(from),
+                        to: format(to),
+                        resolution,
                     },
                 }
             );
@@ -65,16 +66,22 @@ export default function TaskChart() {
 
     const series = useMemo(
         () =>
-            chartData.map(({ period, count }) => ({
-            name:
+
+        chartData.map(({ period, count }) => {
+            const utcDate = parseISO(period);
+            const zonedDate = toZonedTime(utcDate, 'America/Sao_Paulo');
+
+            return {
+                name:
                 resolution === 'monthly'
-                ? format(new Date(period), 'MMM')
-                : resolution === 'weekly'
-                ? format(new Date(period), 'dd/MM')
-                : format(new Date(period), 'dd MMM'),
-            value: count,
-            })),
-        [chartData, resolution],
+                    ? format(zonedDate, 'MMM')
+                    : resolution === 'weekly'
+                    ? format(zonedDate, 'dd/MM')
+                    : format(zonedDate, 'dd MMM'),
+                value: count,
+            };
+        }),
+        [chartData, resolution]
     );
 
   return (
